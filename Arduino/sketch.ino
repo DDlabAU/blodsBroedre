@@ -19,12 +19,12 @@ void setup() {
 }
 
 void loop() {
-	while(!digitalRead()); //while low.
+	while(!digitalRead(inputPin)); //while low.
 	//delay(20); //debounce ..
 	timeAtActivation=millis();
 	digitalWrite(outputPin,HIGH); //activate
 	while(digitalRead(inputPin) && millis()<timeAtActivation+MAX_ACTIVATION_TIME); //while high && while MAX_ACTIVATION_TIME is not exceeded
 	digitalWrite(outputPin,LOW); //deactivate
-	while(digitalRead()); //wait for pin to go low... (only relevant if timer was maxed out)
+	while(digitalRead(inputPin)); //wait for pin to go low... (only relevant if timer was maxed out)
 	//delay(20); //debounce .. probably not needed
 }
