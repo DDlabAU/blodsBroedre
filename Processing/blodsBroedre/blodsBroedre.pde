@@ -17,7 +17,8 @@ void setup() {
   GPIO.pinMode(outputPin, GPIO.OUTPUT);
 
   //HVOR BILLEDERNE SKAL GEMMES
-  saveLoc = "C:\\Users\\N\\Desktop\\blodsBilleder";
+  //saveLoc = "C:\\Users\\N\\Desktop\\blodsBilleder";
+  saveLoc = "/home/pi";
 
   //Indsæt font til normal tekst
   regF = loadFont("GTWalsheim-BoldOblique-100.vlw");
@@ -41,7 +42,7 @@ void setup() {
 
   backgroundImg = loadImage("billede1.png");
   bloodY = height;
-  bloodYInc = 1;
+  bloodYInc = 15;
   s2String = "";
 }
 
