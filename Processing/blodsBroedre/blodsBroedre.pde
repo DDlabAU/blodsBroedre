@@ -1,3 +1,5 @@
+import processing.io.*;
+
 int stage = 0;
 ArrayList<PImage> images;
 PImage backgroundImg, resultImg;
@@ -5,11 +7,14 @@ String s2String, saveLoc;
 float bloodY, bloodYInc;
 PFont regF, ordF;
 int stage3Timer;
-
-boolean reveal;
+int inputPin = 4;
+int outputPin = 17;
 
 
 void setup() {
+
+  GPIO.pinMode(inputPin, GPIO.INPUT);
+  GPIO.pinMode(outputPin, GPIO.OUTPUT);
 
   //HVOR BILLEDERNE SKAL GEMMES
   saveLoc = "C:\\Users\\N\\Desktop\\blodsBilleder";
@@ -19,7 +24,8 @@ void setup() {
   //Indsæt font til det input-ordet
   ordF = loadFont("GTWalsheim-BoldOblique-100.vlw");
 
-  size(1024, 768);
+  //size(1024, 768);
+  fullScreen();
   background(255, 255, 255);
 
   images = new ArrayList<PImage>();
@@ -35,7 +41,7 @@ void setup() {
 
   backgroundImg = loadImage("billede1.png");
   bloodY = height;
-  bloodYInc = 5;
+  bloodYInc = 1;
   s2String = "";
 }
 
@@ -48,14 +54,18 @@ void draw() {
 void show() {
   switch(stage) {
   case 0:
-    showText();
+    if (GPIO.digitalRead(inputPin) == GPIO.LOW && s2String.length() != 0) {
+      nextStage();
+    } else {
+      showText();
+    }
     break;
 
   case 1:
     showText();
     fill(#b22020);
     noStroke();
-    rect(0, bloodY, width, height);
+    rect(0, bloodY, width, height + 10);
     bloodY -= bloodYInc;
     if (bloodY < 0) {
       nextStage();
@@ -65,7 +75,7 @@ void show() {
     showResult();
     fill(#b22020);
     noStroke();
-    rect(0, bloodY, width, height);
+    rect(0, bloodY, width, height + 10);
     bloodY += bloodYInc;
     if (bloodY > height) {
       nextStage();
@@ -82,9 +92,11 @@ void nextStage() {
   switch(stage) {
   case 0:
     createSaveImage();
+    GPIO.digitalWrite(outputPin, GPIO.HIGH);
     break;
 
   case 1:
+    GPIO.digitalWrite(outputPin, GPIO.LOW);
     break;
 
   case 2:
@@ -157,9 +169,7 @@ PImage getImg(char ch) {
 void keyTyped() {
   switch(stage) {
   case 0:
-    if (key == ENTER || key == RETURN) {
-      nextStage();
-    } else if (key == BACKSPACE && s2String.length() > 0) {
+    if (key == BACKSPACE && s2String.length() > 0) {
       s2String = s2String.substring(0, s2String.length()-1);
     } else if (Character.isLetter(key)) {
       s2String += key;
