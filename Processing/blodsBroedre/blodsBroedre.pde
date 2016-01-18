@@ -66,7 +66,7 @@ void show() {
     showText();
     fill(#b22020);
     noStroke();
-    rect(0, bloodY, width, height + 10);
+    rect(0, bloodY, width, height + bloodYInc);
     bloodY -= bloodYInc;
     if (bloodY < 0) {
       nextStage();
@@ -76,7 +76,7 @@ void show() {
     showResult();
     fill(#b22020);
     noStroke();
-    rect(0, bloodY, width, height + 10);
+    rect(0, bloodY, width, height + bloodYInc);
     bloodY += bloodYInc;
     if (bloodY > height) {
       nextStage();
