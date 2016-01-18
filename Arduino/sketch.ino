@@ -1,28 +1,23 @@
-const int buttonPin = 2;
-const int buttonPin2 = 7;
 
+#define MAX_ACTIVATION_TIME 30000 //miliseconds
+
+const int inputPin = 2;
+const int outputPin = 13;
+unsigned long timeAtActivation=0;
 
 void setup() {
-  // put your setup code here, to run once:
-
-
- pinMode(buttonPin, INPUT); 
- pinMode(buttonPin2, INPUT);  
-
- Serial.begin(9600);
- // initialize the pushbutton pin as an input:
-
-
+ pinMode(inputPin, INPUT);
+ pinMode(outputPin, OUTPUT);
+ digitalWrite(outputPin,LOW); //start deactivated
 }
 
 void loop() {
- 
-if (digitalRead (2) == 1 && digitalRead (7) == 1)
-  { 
-    Serial.println(digitalRead(2));
-    //Serial.println(digitalRead(7));
-    delay(1000);
-  }
-  
-  //delay(2);
+
+	while(!digitalRead()); //while low.
+	delay(20); //debounce .. probably not needed
+	timeAtActivation=millis();
+	digitalWrite(outputPin,HIGH); //activate
+	while(digitalRead() && millis()<timeAtActivation+MAX_ACTIVATION_TIME); //while high && while MAX_ACTIVATION_TIME is not exceeded
+	digitalWrite(outputPin,LOW); //deactivate
+
 }
