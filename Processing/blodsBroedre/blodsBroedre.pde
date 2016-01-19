@@ -5,7 +5,7 @@ ArrayList<PImage> images;
 PImage backgroundImg, resultImg;
 String s2String, saveLoc;
 float bloodY, bloodYInc;
-PFont regF, ordF;
+PFont font;
 int stage3Timer;
 int inputPin = 4;
 int outputPin = 17;
@@ -21,9 +21,7 @@ void setup() {
   saveLoc = "/home/pi";
 
   //Indsæt font til normal tekst
-  regF = loadFont("GTWalsheim-BoldOblique-100.vlw");
-  //Indsæt font til det input-ordet
-  ordF = loadFont("GTWalsheim-BoldOblique-100.vlw");
+  font = loadFont("GTWalsheim-BoldOblique-100.vlw");
 
   //size(1024, 768);
   fullScreen();
@@ -41,6 +39,7 @@ void setup() {
 
 
   backgroundImg = loadImage("billede1.png");
+  backgroundImg.resize(width/2, height/2);
   bloodY = height;
   bloodYInc = 15;
   s2String = "";
@@ -56,17 +55,19 @@ void show() {
   switch(stage) {
   case 0:
     if (GPIO.digitalRead(inputPin) == GPIO.LOW && s2String.length() != 0) {
-      nextStage();
+     nextStage();
     } else {
-      showText();
+     showText();
     }
     break;
 
   case 1:
     showText();
+    pushStyle();
     fill(#b22020);
     noStroke();
     rect(0, bloodY, width, height + bloodYInc);
+    popStyle();
     bloodY -= bloodYInc;
     if (bloodY < 0) {
       nextStage();
@@ -74,9 +75,11 @@ void show() {
     break;
   case 2:
     showResult();
+    pushStyle();
     fill(#b22020);
     noStroke();
     rect(0, bloodY, width, height + bloodYInc);
+    popStyle();
     bloodY += bloodYInc;
     if (bloodY > height) {
       nextStage();
@@ -112,30 +115,38 @@ void nextStage() {
   stage %= 4;
 }
 
+void showText() {
+  pushStyle();
+  textAlign(CENTER);
+  imageMode(CENTER);
+  image(backgroundImg, width/2, height/2);
+  textFont(font, 100);
+  stroke(0);
+  fill(0);
+  text(s2String.toUpperCase(), (width/2), height/2);
+  textFont(font, 40);
+  text("Sæt ord på jeres venskab", width/2, height * 0.2);
+  text("Tryk på nålene når i er klar", width/2, height*0.875);
+  popStyle();
+}
+
 void showResult() {
+  pushStyle();
   imageMode(CENTER);
   image(resultImg, width/2, height/2);
 
   fill(0);
   stroke(0);
-  textFont(regF, 40);
+  textFont(font, 40);
   //RET TIL SÅ TEKSTEN STÅR DET RIGTIGE STED
   textAlign(CENTER);
-  text("Dette billede blev skabt af ordet", 512, 650);
+  text("Dette billede blev skabt af ordet", (width/2), height*0.25);
 
-  textFont(ordF, 70);
+  textFont(font, 70);
   //RET TIL SÅ TEKSTEN STÅR DET RIGTIGE STED
   textAlign(CENTER);
-  text(s2String.toUpperCase(), 512, 740);
-}
-
-void showText() {
-  imageMode(CORNER);
-  image(backgroundImg, 0, 0);
-  textFont(ordF, 100);
-  stroke(0);
-  fill(0);
-  text(s2String.toUpperCase(), width/2 - textWidth(s2String)/2, height/2);
+  text(s2String.toUpperCase(), width/2, height*0.75);
+  popStyle();
 }
 
 void createSaveImage() {
@@ -145,6 +156,7 @@ void createSaveImage() {
     resultImg.blend(letterImg, 0, 0, 600, 600, 0, 0, 600, 600, LIGHTEST);
   }
   resultImg.save(saveLoc + "\\" + getName() + "_" + s2String + ".png");
+  
 }
 
 PImage getImg(char ch) {
@@ -174,6 +186,8 @@ void keyTyped() {
       s2String = s2String.substring(0, s2String.length()-1);
     } else if (Character.isLetter(key)) {
       s2String += key;
+    } else if ((key == ENTER || key == RETURN) && s2String.length() > 0) {
+      nextStage();
     }
     break;
   case 3:
