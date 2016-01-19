@@ -186,8 +186,6 @@ void keyTyped() {
       s2String = s2String.substring(0, s2String.length()-1);
     } else if (Character.isLetter(key)) {
       s2String += key;
-    } else if ((key == ENTER || key == RETURN) && s2String.length() > 0) {
-      nextStage();
     }
     break;
   case 3:
