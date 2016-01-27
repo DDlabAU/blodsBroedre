@@ -6,9 +6,12 @@ PImage backgroundImg, resultImg;
 String s2String, saveLoc;
 float bloodY, bloodYInc;
 PFont font;
-int stage3Timer;
 int inputPin = 4;
 int outputPin = 17;
+int resultScreenTimerSec;
+//The amount of seconds the last screen with the users phrase and the resulting image will last
+//last before switching to the first screen keep <= 59 or bad things will happen.
+int resultScreenDelay = 30;
 
 
 void setup() {
@@ -88,6 +91,13 @@ void show() {
 
   case 3:
     showResult();
+    int currentSec = second();
+    if(currentSec < resultScreenTimerSec){
+      currentSec += 60;
+    }
+    if(currentSec - resultScreenTimerSec >= resultScreenDelay){
+      nextStage();
+    }
     break;
   }
 }
@@ -104,7 +114,7 @@ void nextStage() {
     break;
 
   case 2:
-    stage3Timer = millis();
+    resultScreenTimerSec = second();
     break;
 
   case 3:
