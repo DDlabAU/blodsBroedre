@@ -110,7 +110,7 @@ void nextStage() {
     break;
 
   case 2:
-  	resetStageAtSeconds=(second()+resultScreenDelay)%59; // % (modulo) 59 means it counts to 59 and starts back at 0, so 50+30=20
+  	resetStageAtSeconds=(second()+resultScreenDelay)%60; // % (modulo) 60 means it counts to 59 and starts back at 0, so 50+30=20
     break;
 
   case 3:
