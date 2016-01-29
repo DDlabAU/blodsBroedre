@@ -85,14 +85,13 @@ void show() {
     popStyle();
     bloodY += bloodYInc;
     if (bloodY > height) {
-     resetStageAtSeconds=(second()+resultScreenDelay)%59; // % (modulo) 59 means it counts to 59 and starts back at 0, so 50+30=20
      nextStage();
     }
     break;
 
   case 3:
     showResult();
-    if(second()>=resetStageAtSeconds){
+    if(second()==resetStageAtSeconds){
       nextStage();
     }
     break;
@@ -111,6 +110,7 @@ void nextStage() {
     break;
 
   case 2:
+  	resetStageAtSeconds=(second()+resultScreenDelay)%59; // % (modulo) 59 means it counts to 59 and starts back at 0, so 50+30=20
     break;
 
   case 3:
