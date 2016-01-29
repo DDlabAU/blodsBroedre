@@ -112,7 +112,7 @@ void nextStage() {
     break;
 
   case 2:
-    resultScreenTimerSec = second();
+    secondsAtResultscreenStart = second();
     break;
 
   case 3:
