@@ -8,7 +8,7 @@ float bloodY, bloodYInc;
 PFont font;
 int inputPin = 4;
 int outputPin = 17;
-int resultScreenTimerSec;
+int secondsAtResultscreenStart;
 //The amount of seconds the last screen with the users phrase and the resulting image will last
 //last before switching to the first screen keep <= 59 or bad things will happen.
 int resultScreenDelay = 30;
@@ -85,17 +85,15 @@ void show() {
     popStyle();
     bloodY += bloodYInc;
     if (bloodY > height) {
+      secondsAtResultscreenStart=second();
+
       nextStage();
     }
     break;
 
   case 3:
     showResult();
-    int currentSec = second();
-    if(currentSec < resultScreenTimerSec){
-      currentSec += 60;
-    }
-    if(currentSec - resultScreenTimerSec >= resultScreenDelay){
+    if(second()<(secondsAtResultscreenStart+30)%59){ //modulo 59 means it counts to 59 and starts back at 0, so 50+30=20
       nextStage();
     }
     break;
@@ -166,7 +164,7 @@ void createSaveImage() {
     resultImg.blend(letterImg, 0, 0, 600, 600, 0, 0, 600, 600, LIGHTEST);
   }
   resultImg.save(saveLoc + "\\" + getName() + "_" + s2String + ".png");
-  
+
 }
 
 PImage getImg(char ch) {
