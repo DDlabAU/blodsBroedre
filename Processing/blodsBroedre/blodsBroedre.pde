@@ -8,7 +8,7 @@ float bloodY, bloodYInc;
 PFont font;
 int inputPin = 4;
 int outputPin = 17;
-int secondsAtResultscreenStart;
+int resetStageAtSeconds;
 //The amount of seconds the last screen with the users phrase and the resulting image will last
 //last before switching to the first screen keep <= 59 or bad things will happen.
 int resultScreenDelay = 30;
@@ -85,13 +85,14 @@ void show() {
     popStyle();
     bloodY += bloodYInc;
     if (bloodY > height) {
+     resetStageAtSeconds=(second()+resultScreenDelay)%59; // % (modulo) 59 means it counts to 59 and starts back at 0, so 50+30=20
      nextStage();
     }
     break;
 
   case 3:
     showResult();
-    if(second()<(secondsAtResultscreenStart+resultScreenDelay)%59){ //modulo 59 means it counts to 59 and starts back at 0, so 50+30=20
+    if(second()>=resetStageAtSeconds){
       nextStage();
     }
     break;
@@ -110,7 +111,6 @@ void nextStage() {
     break;
 
   case 2:
-    secondsAtResultscreenStart = second();
     break;
 
   case 3:
